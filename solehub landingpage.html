@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sole Hub — The Sneaker Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0d1b2e;
+    --navy-mid: #122040;
+    --navy-light: #1a2d4a;
+    --yellow: #f5d020;
+    --yellow-dark: #e0b800;
+    --white: #ffffff;
+    --gray: #8a9bb0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    overflow-x: hidden;
+  }
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(13,27,46,0.95);
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(245,208,32,0.15);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+  .nav-logo span { color: var(--yellow); }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--yellow); }
+  .nav-cta {
+    background: var(--yellow) !important;
+    color: var(--navy) !important;
+    padding: 10px 22px !important;
+    font-weight: 900 !important;
+    letter-spacing: 1.5px !important;
+    transition: background 0.2s, transform 0.15s !important;
+  }
+  .nav-cta:hover { background: var(--yellow-dark) !important; transform: translateY(-1px); }
+
+  /* ══════════════════════════════
+     TICKER
+  ══════════════════════════════ */
+  .ticker {
+    background: var(--yellow);
+    color: var(--navy);
+    padding: 9px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 22s linear infinite;
+  }
+  .ticker-inner span { margin: 0 30px; }
+  @keyframes ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ══════════════════════════════
+     HERO
+  ══════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+    gap: 40px;
+  }
+  .hero::before {
+    content: 'SH';
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 500px;
+    color: rgba(245,208,32,0.04);
+    pointer-events: none;
+    line-height: 1;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .hero-content { flex: 1; max-width: 560px; }
+
+  .hero-eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 9vw, 110px);
+    line-height: 0.9;
+    letter-spacing: 1px;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.25s forwards;
+  }
+  .hero-title .outline {
+    -webkit-text-stroke: 2px var(--white);
+    color: transparent;
+  }
+  .hero-desc {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--gray);
+    line-height: 1.8;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    max-width: 400px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s forwards;
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.55s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .btn-primary {
+    background: var(--yellow);
+    color: var(--navy);
+    padding: 14px 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--yellow-dark); transform: translateY(-2px); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--white);
+    padding: 14px 32px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    border: 2px solid rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, transform 0.15s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-2px); }
+
+  /* Logo area */
+  .hero-logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  /* ─────────────────────────────────────────────────────
+     LOGO PLACEHOLDER
+     To use your real logo, replace the entire
+     <div class="logo-placeholder"> block with:
+
+       <img
+         src="your-logo.png"
+         alt="Sole Hub"
+         class="logo-img"
+       >
+
+     And add this CSS:
+       .logo-img {
+         width: 320px;
+         height: 320px;
+         object-fit: contain;
+         animation: logoFloat 4s ease-in-out infinite;
+         filter: drop-shadow(0 0 40px rgba(245,208,32,0.25));
+       }
+  ───────────────────────────────────────────────────── */
+  .logo-placeholder {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: var(--yellow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    letter-spacing: 4px;
+    border: 6px solid var(--navy-light);
+    box-shadow: 0 0 80px rgba(245,208,32,0.2);
+    position: relative;
+    overflow: hidden;
+    animation: logoFloat 4s ease-in-out infinite;
+  }
+  .logo-placeholder .logo-sub {
+    font-size: 28px;
+    letter-spacing: 6px;
+    margin-top: -8px;
+  }
+  .logo-placeholder .logo-est {
+    position: absolute;
+    left: 38px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .logo-placeholder .logo-year {
+    position: absolute;
+    right: 38px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    text-align: center;
+  }
+  .logo-placeholder .logo-ring {
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    border: 2px solid rgba(13,27,46,0.2);
+    pointer-events: none;
+  }
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0)   rotate(0deg); }
+    50%       { transform: translateY(-12px) rotate(1deg); }
+  }
+  .section { padding: 100px 60px; }
+
+  .section-eyebrow {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 6vw, 80px);
+    line-height: 0.95;
+    margin-bottom: 60px;
+  }
+
+  /* ══════════════════════════════
+     HOW IT WORKS CARDS
+  ══════════════════════════════ */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: var(--yellow);
+    color: var(--navy);
+    padding: 36px 30px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(245,208,32,0.2);
+  }
+  .card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 90px;
+    color: rgba(13,27,46,0.08);
+    position: absolute;
+    top: -10px; right: 10px;
+    line-height: 1;
+    -webkit-user-select: none; /* Safari 3+, iOS 3+ */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE10+ */
+    user-select: none;
+  }
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .card-text {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.65;
+    position: relative;
+  }
+  .brands-section {
+    padding: 70px 60px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .brands-eyebrow {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .brands-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    margin-bottom: 40px;
+  }
+  .brands-row {
+    display: flex;
+    align-items: center;
+  }
+  .brand-item {
+    flex: 1;
+    text-align: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: var(--gray);
+    padding: 18px 10px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    transition: color 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  .brand-item:last-child { border-right: none; }
+  .brand-item:hover {
+    color: var(--yellow);
+    background: rgba(245,208,32,0.04);
+  }
+  .sellers-section {
+    padding: 100px 60px;
+    background: var(--navy-light);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .sellers-bg-text {
+    position: absolute;
+    right: -20px;
+    bottom: -30px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 220px;
+    color: rgba(245,208,32,0.04);
+    letter-spacing: 10px;
+    line-height: 1;
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .sellers-eyebrow {
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: var(--yellow);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .sellers-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5vw, 72px);
+    line-height: 0.95;
+    margin-bottom: 20px;
+  }
+  .sellers-desc {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .sellers-stats {
+    display: flex;
+    gap: 40px;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--yellow);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gray);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .sell-box {
+    background: var(--yellow);
+    color: var(--navy);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 120px;
+    letter-spacing: 10px;
+    padding: 40px 60px;
+    line-height: 1;
+    transition: transform 0.2s;
+    cursor: default;
+  }
+  .sell-box:hover { transform: scale(1.04) rotate(-1deg); }
+
+  /* ══════════════════════════════
+     TEAM
+  ══════════════════════════════ */
+  .team-section { padding: 100px 60px; }
+
+  .team-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 60px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .team-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 5vw, 72px);
+    line-height: 0.95;
+  }
+  .team-desc {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray);
+    line-height: 1.8;
+    padding-top: 12px;
+    border-left: 3px solid var(--yellow);
+    padding-left: 24px;
+  }
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .team-card {
+    background: var(--navy-light);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+  .team-photo {
+    width: 100%;
+    height: 300px;
+    background: linear-gradient(160deg, #1a2d4a 0%, #0d1b2e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: rgba(245,208,32,0.2);
+    letter-spacing: 4px;
+  }
+
+  .team-role-bar {
+    background: var(--yellow);
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 20px;
+  }
+  .team-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    padding: 14px 20px 4px;
+  }
+  .team-specialty {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--yellow);
+    text-transform: uppercase;
+    padding: 0 20px 14px;
+  }
+  .team-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 0 20px 20px;
+  }
+  .tag {
+    background: rgba(245,208,32,0.12);
+    color: var(--yellow);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+  }
+
+  /* ══════════════════════════════
+     FOOTER
+  ══════════════════════════════ */
+  footer {
+    background: var(--navy);
+    border-top: 3px solid var(--yellow);
+  }
+  .footer-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    padding: 80px 60px;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 3px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .footer-logo span { color: var(--yellow); }
+  .footer-tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.8;
+  }
+  .footer-contact { text-align: right; }
+  .footer-q {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .footer-links {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 2.2;
+  }
+  .footer-links a {
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--yellow); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+    padding: 18px 60px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+  }
+
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+
+    .hero {
+      padding: 100px 24px 60px;
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+    }
+    .hero-desc { margin-left: auto; margin-right: auto; }
+    .hero-buttons { justify-content: center; }
+    .hero::before { font-size: 200px; }
+
+    .section,
+    .brands-section,
+    .team-section { padding: 60px 24px; }
+
+    .cards-grid,
+    .team-grid { grid-template-columns: 1fr; }
+
+    .sellers-section {
+      grid-template-columns: 1fr;
+      padding: 60px 24px;
+    }
+    .team-header { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; padding: 60px 24px; }
+    .footer-contact { text-align: left; }
+    .brands-row { flex-wrap: wrap; }
+    .logo-placeholder { width: 240px; height: 240px; font-size: 42px; }
+    .logo-placeholder .logo-est,
+    .logo-placeholder .logo-year { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo">SOLE <span>HUB</span></div>
+  <div class="nav-links">
+    <a href="#how">How It Works</a>
+    <a href="#brands">Brands</a>
+    <a href="#sell">Sell</a>
+    <a href="#team">Team</a>
+    <a href="#contact" class="nav-cta">Shop Now</a>
+  </div>
+</nav>
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">The Sneaker Marketplace</p>
+    <h1 class="hero-title">
+      TRADE<br>
+      <span class="outline">HEAT.</span><br>
+      OWN THE<br>
+      STREETS.
+    </h1>
+    <p class="hero-desc">
+      SoleHub connects buyers and sellers in the world's most trusted
+      sneaker marketplace. Authenticated kicks. Seamless transactions.
+      Real-time deals.
+    </p>
+    <div class="hero-buttons">
+      <a href="#brands" class="btn-primary">SHOP NOW</a>
+      <a href="#how"    class="btn-secondary">YOUR PAIRS</a>
+    </div>
+  </div>
+
+  <div class="hero-logo">
+       <img
+      src="assets/logo b.png"
+      alt="Sole Hub"
+      style="width:320px;height:320px;object-fit:contain;
+             animation:logoFloat 4s ease-in-out infinite;
+             filter:drop-shadow(0 0 40px rgba(245,208,32,0.25));"
+    >
+  </div>
+</section>
+<section class="section" id="how">
+  <p class="section-eyebrow">—01 The Process</p>
+  <h2 class="section-title">HOW IT<br>WORKS</h2>
+  <div class="cards-grid">
+    <div class="card">
+      <span class="card-num">01</span>
+      <h3 class="card-title">BROWSE AND DISCOVER</h3>
+      <p class="card-text">Explore brand new shoe listings across every major brand, colorway, and size. Set price alerts and never miss a drop.</p>
+    </div>
+    <div class="card">
+      <span class="card-num">02</span>
+      <h3 class="card-title">VERIFIED AND SECURE</h3>
+      <p class="card-text">Every pair passes through our expert authentication team before it reaches you. Fakes get rejected. Your money stays protected.</p>
+    </div>
+    <div class="card">
+      <span class="card-num">03</span>
+      <h3 class="card-title">TRADE AND PROFIT</h3>
+      <p class="card-text">Swap pairs directly with other collectors or flip for profit. Real-time trade matching makes deals happen fast — no cash needed.</p>
+    </div>
+  </div>
+</section>
+<section class="brands-section" id="brands">
+  <p class="brands-eyebrow">—02 Top Brands</p>
+  <h2 class="brands-title">SHOP FOR YOUR FAVORITE PAIRS</h2>
+  <div class="brands-row">
+    <div class="brand-item">NIKE</div>
+    <div class="brand-item">ADIDAS</div>
+    <div class="brand-item">PUMA</div>
+    <div class="brand-item">JORDAN</div>
+    <div class="brand-item">VANS</div>
+    <div class="brand-item">NEW BALANCE</div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+  </div>
+</div>
+<section class="sellers-section" id="sell">
+  <div>
+    <p class="sellers-eyebrow">—03 For Sellers</p>
+    <h2 class="sellers-title">TURN YOUR<br>KICKS INTO<br>CASH</h2>
+    <p class="sellers-desc">
+      Be one of the Sole Hub sellers and earn cash. List in minutes,
+      reach interested buyers, and get paid fast with our low fees.
+    </p>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;align-items:center;">
+    <div class="sell-box">SELL</div>
+  </div>
+  <div class="sellers-bg-text">$$</div>
+</section>
+
+<!-- TICKER 2 -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+  </div>
+</div>
+<section class="team-section" id="team">
+  <p class="section-eyebrow">—04 Meet The Builders</p>
+  <div class="team-header">
+    <h2 class="team-title">THE MINDS<br>BEHIND<br>SOLE HUB</h2>
+    <p class="team-desc">
+      Sole Hub was born from a simple frustration — buying and selling sneakers
+      shouldn't require guesswork, middlemen, or fear of fakes. Our team of
+      passionate developers, designers, and sneaker enthusiasts came together
+      to build the platform they always wished existed. Every feature is crafted
+      with the collector in mind.
+    </p>
+  </div>
+
+  <div class="team-grid">
+    <div class="team-card">
+           <img src="assets/tin.jpg" alt="Christine Laroya"
+     style="width:100%;height:300px;object-fit:cover;
+            object-position:top center;display:block;">
+      <div class="team-role-bar">Founder &amp; Designer</div>
+      <div class="team-name">CHRISTINE LAROYA</div>
+      <div class="team-specialty">UX / UI &amp; Brand Identity</div>
+      <div class="team-tags">
+        <span class="tag">Figma</span>
+        <span class="tag">Branding</span>
+        <span class="tag">Design</span>
+      </div>
+    </div>
+    <div class="team-card">
+           <img src="assets/moi.jpg" alt="Moises Rivero"
+     style="width:100%;height:300px;object-fit:cover;
+            object-position:top center;display:block;">
+      <div class="team-role-bar">Co-Founder &amp; Programmer</div>
+      <div class="team-name">MOISES RIVERO</div>
+      <div class="team-specialty">Backend &amp; Infrastructure</div>
+      <div class="team-tags">
+        <span class="tag">JavaScript</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">GitHub</span>
+      </div>
+    </div>
+    <div class="team-card">
+           <img src="assets/kim.jpg" alt="Mark Kim Montemayor"
+     style="width:100%;height:300px;object-fit:cover;
+            object-position:top center;display:block;">
+      <div class="team-role-bar">Co-Founder &amp; Documenter</div>
+      <div class="team-name">MARK KIM MONTEMAYOR</div>
+      <div class="team-specialty">Product &amp; Vision</div>
+      <div class="team-tags">
+        <span class="tag">Document</span>
+        <span class="tag">Product</span>
+        <span class="tag">Organizer</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+<footer id="contact">
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+      <span>SOLE HUB</span><span>SOLE HUB</span><span>SOLE HUB</span>
+    </div>
+  </div>
+
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">SOLE <span>HUB</span></div>
+      <div class="footer-tagline">
+        The world's most trusted sneaker<br>
+        marketplace. Authenticated.<br>
+        Guaranteed. Yours.
+      </div>
+    </div>
+    <div class="footer-contact">
+      <div class="footer-q">Questions?</div>
+      <div class="footer-links">
+        Email: dev.laroya25@gmail.com<br>
+        Facebook : <a href="#">Chr Sly</a><br>
+        Instagram : <a href="#">@calisigil</a><br>
+        Telegram : <a href="#">@chrslymrls</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 Sole Hub — Est. 2026 — All Rights Reserved
+  </div>
+</footer>
+
+</body>
+</html>
